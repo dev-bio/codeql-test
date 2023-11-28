@@ -1,0 +1,35 @@
+name: Contribution Scaning
+
+on:
+
+  pull_request:
+
+jobs:
+
+  contribution-scanner:
+    name: Contribution Scanner
+    runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Scan
+        run: |
+          semgrep scan \
+            --baseline-commit ${{ github.event.pull_request.base.sha }} \
+            --sarif --output report.sarif \
+            --config=p/default \
+            --metrics=off \
+            --error
+
+      - name: Upload
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: report.sarif
+          category: semgrep
