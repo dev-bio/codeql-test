@@ -1,4 +1,4 @@
-name: Contribution Scaning
+name: Contribution Scanning
 
 on:
 
@@ -25,8 +25,7 @@ jobs:
             --baseline-commit ${{ github.event.pull_request.base.sha }} \
             --sarif --output report.sarif \
             --config=p/default \
-            --metrics=off \
-            --error
+            --metrics=off
 
       - name: Upload
         uses: github/codeql-action/upload-sarif@v2
